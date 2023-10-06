@@ -1,4 +1,4 @@
-﻿________________________________________________________________________ BANCO DE DADOS 01:04
+﻿________________________________________________________________________ BANCO DE DADOS
 
 1 - Para o gerenciamento das questãoes de banco de dados é necessário a instalação do pacote do 'MICROSOFT.ENTITYFRAMEWORKCORE' caso esteja utilizando o framework 'CORE' 
 	e o 'MICROSOFT.ENTITYFRAMEWORK.TOOLS'.
@@ -32,7 +32,20 @@ ________________________________________________________________________ EXTERNA
 	1 - Esta classe coleta, de um repositório, todas as palavras base do português. Para tal, se utiliza da classe 'HttpClient' e através do método 'GetAsync()', se conecta a repositório.
 		Através do resultado(response), extrai as informações com o método 'ReadAsStringAsyn()'. Feito isso, basta definir a forma que será tratada o retorno.
 
-________________________________________________________________________ ANGULAR NG
+________________________________________________________________________ ANGULAR NG - #ERRO
 	1 - A palavra reservada, NG, não funcionou por nada. A solução para a criação do pacote foi a utilização do código abaixo:
 		npx -p @angular/cli ng new Termo.FrontEnd
 	Fonte: https://stackoverflow.com/questions/54184357/npx-with-angular-cli-how-to-install-angular-cli-and-use-it-afterwards
+
+	OBS 3:
+		Com a dificuldade encontrada em utilizar a chave NG, mesmo após a instalação a mesma não se fará executável. Para executar a mesma se fez necessário a utilização do 
+		seguinte artifício:
+			npm run ng serve -o
+
+________________________________________________________________________ GITHUB - PASTA INACESSÍVEL
+	
+	1 - Problema com pasta criada com o outro repositório. A solução para que a pasta volte a ficar acessível dentro do repositório do git hub é:
+		A - Na pasta 'root' usar o seguinte comando : git rm --cached NomeDaPastaQueContémOOutroRepositório.
+		B - Após a conclusão com exito do comando acima, deve-se excluir a pasta '.git' da pasta citada acima.
+		C - Após a exclusão da pasta '.git', ainda no diretório raiz, executar o seguinte código: git add NomeDaPastaQueContinhaOOutroRepositório.
+		D - Depois basta realizar o upload novamente, seja pelo visul studio, seja por linha ou IDE's do git.
