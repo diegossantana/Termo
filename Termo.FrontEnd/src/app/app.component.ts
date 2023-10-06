@@ -1,9 +1,16 @@
 import { Component, HostListener } from '@angular/core';
 
+export enum Key {
+  ArrowLeft = 'ArrowLeft',
+  ArrowRight = 'ArrowRight',
+  Backspace = 'Backspace',
+  Enter = 'Enter',
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   title = 'Termo.FrontEnd';
@@ -14,8 +21,10 @@ export class AppComponent {
     if (!this.success) {
       var div = event.target as HTMLElement;
 
-      if (div.parentElement?.getAttribute('row') == this.currentRow.toString()) {
-        div.parentElement?.querySelector(".edit")?.classList.remove('edit');
+      if (
+        div.parentElement?.getAttribute('row') == this.currentRow.toString()
+      ) {
+        div.parentElement?.querySelector('.edit')?.classList.remove('edit');
         div?.classList.add('edit');
       }
     }
@@ -24,7 +33,7 @@ export class AppComponent {
   @HostListener('window:keyup', ['$event'])
   onKeyPress(event: KeyboardEvent) {
     if (!this.success) {
-      var key = event.key
+      var key = event.key;
 
       if (/[a-zA-Z]/.test(key) && key.length == 1) {
         this.setCurrentPositionValue();
@@ -38,6 +47,7 @@ export class AppComponent {
           this.moveLeft();
         }
         this.setCurrentPositionValue();
+      } else if (key == Key.Enter) {
       }
     }
   }
@@ -47,19 +57,29 @@ export class AppComponent {
   }
 
   moveRight() {
-    var index = Number(document.querySelector('.edit')?.getAttributeNode('pos'));
+    var index = Number(
+      document.querySelector('.edit')?.getAttributeNode('pos')
+    );
 
     if (index < 4) {
-      document.querySelector('.edit')?.parentElement?.children.item(index + 1)?.classList.add('edit');
+      document
+        .querySelector('.edit')
+        ?.parentElement?.children.item(index + 1)
+        ?.classList.add('edit');
       document.querySelector('.edit')?.classList.remove('edit');
     }
   }
 
   moveLeft() {
-    var index = Number(document.querySelector('.edit')?.getAttributeNode('pos'));
+    var index = Number(
+      document.querySelector('.edit')?.getAttributeNode('pos')
+    );
 
     if (index > 0) {
-      document.querySelector('.edit')?.parentElement?.children.item(index - 1)?.classList.add('edit');
+      document
+        .querySelector('.edit')
+        ?.parentElement?.children.item(index - 1)
+        ?.classList.add('edit');
       document.querySelectorAll('.edit')[1]?.classList.remove('edit');
     }
   }
