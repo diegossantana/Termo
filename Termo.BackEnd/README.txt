@@ -32,15 +32,6 @@ ________________________________________________________________________ EXTERNA
 	1 - Esta classe coleta, de um repositório, todas as palavras base do português. Para tal, se utiliza da classe 'HttpClient' e através do método 'GetAsync()', se conecta a repositório.
 		Através do resultado(response), extrai as informações com o método 'ReadAsStringAsyn()'. Feito isso, basta definir a forma que será tratada o retorno.
 
-________________________________________________________________________ ANGULAR NG - #ERRO
-	1 - A palavra reservada, NG, não funcionou por nada. A solução para a criação do pacote foi a utilização do código abaixo:
-		npx -p @angular/cli ng new Termo.FrontEnd
-	Fonte: https://stackoverflow.com/questions/54184357/npx-with-angular-cli-how-to-install-angular-cli-and-use-it-afterwards
-
-	OBS 3:
-		Com a dificuldade encontrada em utilizar a chave NG, mesmo após a instalação a mesma não se fará executável. Para executar a mesma se fez necessário a utilização do 
-		seguinte artifício:
-			npm run ng serve -o
 
 ________________________________________________________________________ GITHUB - PASTA INACESSÍVEL
 	

@@ -16,20 +16,23 @@ export class AppComponent {
   title = 'Termo.FrontEnd';
   currentRow = 0;
   success = false;
-
+/* A FUNÇÃO ONCLICK, QUE ESTÁ SENDO CHAMADA DO SCSS, FAZ COM QUE A CADA INTERAÇÃO DO JOGADOR COM O ELEMENTO, O MESMO REAJA SEGUNDO AS REGRAS DO JOGO.*/
   onClick(event: Event) {
     if (!this.success) {
+      /* A LINHA ABAIXO, EVIDENCIA QUE O ELEMENTO SELECIONADO(TARGET) É DO TIPO HTML  */
       var div = event.target as HTMLElement;
-
-      if (
-        div.parentElement?.getAttribute('row') == this.currentRow.toString()
-      ) {
+      /* CONDIÇÃO VERIFICA SE O ELEMENTO TEM O ATRIBUTO ROW E SE A LINHA SELECIONADA TEM É A LINHA 0 */
+      if (div.parentElement?.getAttribute('row') == this.currentRow.toString()) {
+        /* PEGA ELEMENTO QUE FOI SELECIONADO(TARGET), VERIFICA SE TEM O EDIT, PARA NÃO ALTERAR AS DEMAIS LINHAS, DEPOIS REMOVE O EDIT E ADICIONA A OUTRO ITEM? */
         div.parentElement?.querySelector('.edit')?.classList.remove('edit');
         div?.classList.add('edit');
       }
     }
   }
 
+  /* ANOTAÇÃO QUE FICA ESCUTANDO A INTERAÇÃO COM PROGRAMA
+     NO CASO EM QUESTÃO, A INTERAÇÃO COM O TECLADO, MAIS ESPECIFICAMENTE, QUANDO A TECLA É SOLTA APÓS SER PRESSIONADA.
+   */
   @HostListener('window:keyup', ['$event'])
   onKeyPress(event: KeyboardEvent) {
     if (!this.success) {
