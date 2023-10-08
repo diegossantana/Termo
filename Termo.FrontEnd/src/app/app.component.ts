@@ -34,11 +34,18 @@ export class AppComponent {
      NO CASO EM QUESTÃO, A INTERAÇÃO COM O TECLADO, MAIS ESPECIFICAMENTE, QUANDO A TECLA É SOLTA APÓS SER PRESSIONADA.
    */
   @HostListener('window:keyup', ['$event'])
+  /* A classe KeyboardEvent captura todas a entradas do teclado no navegador. */
   onKeyPress(event: KeyboardEvent) {
     if (!this.success) {
       var key = event.key;
-
+  /* Filtro através de regex, para capturar apenas letras
+     O length, faz com que o evento recebido, ou seja, a letra inserida pelo usuário não seja
+     um backspace, space, ou qualquer outra tecla, além das letras.     A
+   */
       if (/[a-zA-Z]/.test(key) && key.length == 1) {
+        /* Atendida a condição, preenche a posição atual através da função 'setCurrentPosition()', através da verificação da posição da classe '.edit' no documento.
+           Depois move o cursor para a próxima posição,  através das funções 'moveRight()' e 'moveLeft()', junto com a classe '.edit' através das funções abaixo.
+        */
         this.setCurrentPositionValue();
         this.moveRight();
       } else if (key == Key.ArrowRight) {
