@@ -4,6 +4,8 @@ using Termo.BackEnd;
 var builder = WebApplication.CreateBuilder(args);
 var externanHttpService = new ExternalHttpService();
 
+builder.Services.AddCors();
+
 builder.Services.AddDbContext<TermoContext>(context => context.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
 builder.Services.AddEndpointsApiExplorer();
@@ -17,6 +19,8 @@ if (app.Environment.IsDevelopment()) {
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(p => p.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 
 app.MapGet("/words", async (TermoContext context) => {
     var day = DateTime.Now.Date;
