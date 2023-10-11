@@ -3,6 +3,7 @@ import { Component, HostListener } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NotifierService } from 'angular-notifier';
+import { WordValidations } from './models/WordValidations';
 
 export enum Key {
   ArrowLeft = 'ArrowLeft',
@@ -79,7 +80,7 @@ export class AppComponent {
         /* Atendida a condição, preenche a posição atual através da função 'setCurrentPosition()', através da verificação da posição da classe '.edit' no documento.
            Depois move o cursor para a próxima posição,  através das funções 'moveRight()' e 'moveLeft()', junto com a classe '.edit' através das funções abaixo.
         */
-        this.setCurrentPositionValue();
+        this.setCurrentPositionValue(key);
         /* O MÉTODO ABAIXO FAZ O MOVIMENTO AUTOMÁTICO PARA A PRÓXIMA POSIÇÃO DEPOIS QUE A LETRA É INSERIDA NA CAIXA SELECIONADA.*/
         this.moveRight();
       } else if (key == Key.ArrowRight) {
@@ -101,6 +102,7 @@ export class AppComponent {
   setCurrentPositionValue(value: string = '') {
     document.querySelector('.edit')?.replaceChildren(value);
   }
+
   /* O MÉTODO ABAIXO FAZ O MOVIMENTO AUTOMÁTICO PARA A PRÓXIMA POSIÇÃO DEPOIS QUE A LETRA É INSERIDA NA CAIXA SELECIONADA.*/
   moveRight() {
     var index = Number(document.querySelector('.edit')?.getAttributeNode('pos'));
@@ -110,6 +112,7 @@ export class AppComponent {
       document.querySelector('.edit')?.classList.remove('edit');
     }
   }
+
   /* O MÉTODO ABAIXO FAZ O MOVIMENTO AUTOMÁTICO PARA A POSIÇÃO ANTERIOR DEPOIS QUE A LETRA É INSERIDA OU REMOVIDA DA CAIXA SELECIONADA.*/
   moveLeft() {
     var index = Number(document.querySelector('.edit')?.getAttributeNode('pos'));
@@ -124,7 +127,7 @@ export class AppComponent {
     var word = this.getWord();
 
     if (word.length < 5) {
-
+      this.notifierService.notify('info', 'Só palavras com 5 letras.')
     } else {
       this.getValidations(word.toLocaleLowerCase());
     }
@@ -180,10 +183,28 @@ export class AppComponent {
           } else {
             this.enableNextRow();
           }
-          //this.setKeyboardColors(validations)
+          this.setKeyboardColors(validations)
         }, 1800);
       })
   }
+  setKeyboardColors(validations: WordValidations) {
+    for (let index = 0; index < validations.letters.length; index++) {
+      const validationLetter = validations.letters[index];
+      var element = document.querySelector(`[keyboard-key="${validationLetter.value.toUpperCase()}"]`);
+
+      if (validationLetter.exists) {
+        if (validationLetter.rightPlace) {
+          element?.classList.remove('place');
+          element?.classList.add('right');
+        } else {
+          element?.classList.add('place');
+        }
+      } else {
+        element?.classList.add('keyboard-wrong');
+      }
+    }
+  }
+
   enableNextRow() {
     this.currentRow++;
 
@@ -198,4 +219,7 @@ export class AppComponent {
       }
     }
   }
+
+
+
 }

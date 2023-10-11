@@ -17,6 +17,6 @@ export class WordService {
   }
 
   getValidations(word: string): Observable<WordValidations>{
-    return this.http.get<WordValidations>(`${this.apiUrl}validations?word=${word}`);
+    return this.http.get<WordValidations>(`${this.apiUrl}validations?words=${word}`);
   }
 }
