@@ -5,6 +5,6 @@ export interface WordValidations {
 
 export interface Letter {
   value: string;
-  exists: boolean;
-  rightPlace: boolean;
+  exists: boolean
+  rightPlace: boolean
 }

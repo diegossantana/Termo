@@ -13,39 +13,49 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment()) {
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-app.UseCors(p => p.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
+app.UseCors(p =>
+p.AllowAnyOrigin()
+.AllowAnyHeader()
+.AllowAnyMethod());
 
-app.MapGet("/words", async (TermoContext context) => {
+app.MapGet("/words", async (TermoContext context) =>
+{
     var day = DateTime.Now.Date;
     var word = await context.DayWords.Where(w => w.Day == day).FirstOrDefaultAsync();
 
-    if (word == null) {
+    if (word == null)
+    {
         return Results.NotFound();
     }
 
     return Results.Ok(word.Value);
 });
 
-app.MapGet("/words/validations", async (TermoContext context, string word) => {
-    if (word.Length != 5) {
+app.MapGet("/words/validations", async (TermoContext context, string word) =>
+{
+    if (word.Length != 5)
+    {
         return Results.BadRequest("Não atende ao padrão de 5 letras.");
     }
     var words = await externanHttpService.GetWords();
-    if (!words.Contains(word.ToLower())) {
+    if (!words.Contains(word.ToLower()))
+    {
         return Results.BadRequest("Palavra não  aceita neste jogo.");
     }
 
     var day = DateTime.Now.Date;
     var dayWord = await context.DayWords.Where(w => w.Day == day).FirstOrDefaultAsync();
 
-    if (dayWord == null) {
+    if (dayWord == null)
+    {
         return Results.NotFound("Palavra não encontrada.");
     }
 
@@ -53,10 +63,12 @@ app.MapGet("/words/validations", async (TermoContext context, string word) => {
 });
 
 //MÉTODO VERIFICA SE A LETRA EXISTE NA PALAVRA E SE A MESMA ESTÁ NA POSIÇÃO CERTA
-static WordResult ValidateWord(string dayWord, string wordAttempt) {
+static WordResult ValidateWord(string dayWord, string wordAttempt)
+{
     Letter[] letterResult = new Letter[dayWord.Length];
 
-    for (int i = 0; i < wordAttempt.Length; i++) {
+    for (int i = 0; i < wordAttempt.Length; i++)
+    {
         var letterAttempt = wordAttempt[i];
         bool exists, rightPlace;
 
@@ -69,10 +81,12 @@ static WordResult ValidateWord(string dayWord, string wordAttempt) {
     return new WordResult(letterResult, dayWord == wordAttempt);
 }
 
-app.MapPost("/words", async (TermoContext context, string word) => {
+app.MapPost("/words", async (TermoContext context, string word) =>
+{
     var day = DateTime.Now.Date;
 
-    var wordDb = new DayWord() {
+    var wordDb = new DayWord()
+    {
         Day = day,
         Value = word
     };

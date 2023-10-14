@@ -25,15 +25,11 @@ export class AppComponent {
 
   constructor(private service: WordService, private notifierService: NotifierService) { }
 
-  /* A FUNÇÃO ONCLICK, QUE ESTÁ SENDO CHAMADA DO SCSS, FAZ COM QUE A CADA INTERAÇÃO DO JOGADOR COM O ELEMENTO, O MESMO REAJA SEGUNDO AS REGRAS DO JOGO.*/
   onClick(event: Event) {
     if (!this.success) {
-      /* A LINHA ABAIXO, EVIDENCIA QUE O ELEMENTO SELECIONADO(TARGET) É DO TIPO HTML  */
       var div = event.target as HTMLElement;
-      /* CONDIÇÃO VERIFICA SE O ELEMENTO TEM O ATRIBUTO ROW E SE A LINHA SELECIONADA TEM É A LINHA 0 */
       if (div.parentElement?.getAttribute('row') == this.currentRow.toString()) {
-        /* PEGA ELEMENTO QUE FOI SELECIONADO(TARGET), VERIFICA SE TEM O EDIT, PARA NÃO ALTERAR AS DEMAIS LINHAS, DEPOIS REMOVE O EDIT E ADICIONA A OUTRO ITEM? */
-        div.parentElement?.querySelector('.edit')?.classList.remove('edit');
+        div.parentElement?.querySelector(".edit")?.classList.remove('edit');
         div?.classList.add('edit');
       }
     }
@@ -62,26 +58,12 @@ export class AppComponent {
     }
   }
 
-  /* ANOTAÇÃO QUE FICA ESCUTANDO A INTERAÇÃO COM PROGRAMA
-     NO CASO EM QUESTÃO, A INTERAÇÃO COM O TECLADO, MAIS ESPECIFICAMENTE, QUANDO A TECLA É SOLTA APÓS SER PRESSIONADA.
-   */
   @HostListener('window:keyup', ['$event'])
-  /* A classe KeyboardEvent captura todas a entradas do teclado no navegador. */
   onKeyPress(event: KeyboardEvent) {
     if (!this.success) {
       var key = event.key;
-      /* ESTA CONDIÇÃO FILTRA O CARACTERE INSERIDO, PEGADO APENAS AS LETRAS E O SEU TAMANHO */
-      /* Filtro através de regex, para capturar apenas letras
-        O length, faz com que o evento recebido, ou seja, a letra inserida pelo usuário não seja
-        um backspace, space, ou qualquer outra tecla, além das letras.     A
-      */
       if (/[a-zA-Z]/.test(key) && key.length == 1) {
-        /* OS MÉTODO ABAIXO INSERE A INFORMAÇÃO NO LOCAL ATUAL*/
-        /* Atendida a condição, preenche a posição atual através da função 'setCurrentPosition()', através da verificação da posição da classe '.edit' no documento.
-           Depois move o cursor para a próxima posição,  através das funções 'moveRight()' e 'moveLeft()', junto com a classe '.edit' através das funções abaixo.
-        */
         this.setCurrentPositionValue(key);
-        /* O MÉTODO ABAIXO FAZ O MOVIMENTO AUTOMÁTICO PARA A PRÓXIMA POSIÇÃO DEPOIS QUE A LETRA É INSERIDA NA CAIXA SELECIONADA.*/
         this.moveRight();
       } else if (key == Key.ArrowRight) {
         this.moveRight();
@@ -98,14 +80,12 @@ export class AppComponent {
     }
   }
 
-  /* O MÉTODO ABAIXO INSEREA INFORMAÇÃO NO LOCAL ATUAL*/
   setCurrentPositionValue(value: string = '') {
     document.querySelector('.edit')?.replaceChildren(value);
   }
 
-  /* O MÉTODO ABAIXO FAZ O MOVIMENTO AUTOMÁTICO PARA A PRÓXIMA POSIÇÃO DEPOIS QUE A LETRA É INSERIDA NA CAIXA SELECIONADA.*/
   moveRight() {
-    var index = Number(document.querySelector('.edit')?.getAttributeNode('pos'));
+    var index = Number(document.querySelector('.edit')?.getAttribute('pos'));
 
     if (index < 4) {
       document.querySelector('.edit')?.parentElement?.children.item(index + 1)?.classList.add('edit');
@@ -113,9 +93,8 @@ export class AppComponent {
     }
   }
 
-  /* O MÉTODO ABAIXO FAZ O MOVIMENTO AUTOMÁTICO PARA A POSIÇÃO ANTERIOR DEPOIS QUE A LETRA É INSERIDA OU REMOVIDA DA CAIXA SELECIONADA.*/
   moveLeft() {
-    var index = Number(document.querySelector('.edit')?.getAttributeNode('pos'));
+    var index = Number(document.querySelector('.edit')?.getAttribute('pos'));
 
     if (index > 0) {
       document.querySelector('.edit')?.parentElement?.children.item(index - 1)?.classList.add('edit');
@@ -152,6 +131,9 @@ export class AppComponent {
   getValidations(word: string) {
     this.service.getValidations(word)
       .pipe(catchError((error: HttpErrorResponse) => {
+        if (error.status == 400) {
+          this.notifierService.notify('info', 'Palavra não aceita');
+        }
         return throwError(() => null)
       }))
       .subscribe(p => {
@@ -187,6 +169,7 @@ export class AppComponent {
         }, 1800);
       })
   }
+
   setKeyboardColors(validations: WordValidations) {
     for (let index = 0; index < validations.letters.length; index++) {
       const validationLetter = validations.letters[index];
@@ -208,7 +191,7 @@ export class AppComponent {
   enableNextRow() {
     this.currentRow++;
 
-    const row = document.querySelector(`[row="{this.currentRow}"]`);
+    const row = document.querySelector(`[row="${this.currentRow}"]`);
     if (row != undefined) {
       for (let index = 0; index < row?.children.length; index++) {
         const letter = row?.children.item(index);
@@ -219,7 +202,4 @@ export class AppComponent {
       }
     }
   }
-
-
-
 }
