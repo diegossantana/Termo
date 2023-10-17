@@ -3,6 +3,8 @@ using Termo.BackEnd;
 
 var builder = WebApplication.CreateBuilder(args);
 
+string dayWord = string.Empty;
+
 builder.Services.AddCors();
 
 builder.Services.AddDbContext<TermoContext>(context => context.UseSqlite(builder.Configuration.GetConnectionString("Default")));
@@ -10,7 +12,7 @@ builder.Services.AddDbContext<TermoContext>(context => context.UseSqlite(builder
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var externanHttpService = new ExternalHttpService(builder);
+var externanHttpService = new ExternalHttpService();
 
 var app = builder.Build();
 
@@ -30,18 +32,22 @@ p.AllowAnyOrigin()
 app.MapGet("/words", async (TermoContext context) =>
 {
     var day = DateTime.Now.Date;
-    var word = await context.DayWords.Where(w => w.Day == day).FirstOrDefaultAsync();
+    dayWord = externanHttpService.loadDatabase(builder).Result; 
 
-    if (word == null)
+    if (dayWord == null)
     {
         return Results.NotFound();
     }
 
-    return Results.Ok(word.Value);
+    return Results.Ok(dayWord);
 });
 
 app.MapGet("/words/validations", async (TermoContext context, string word) =>
 {
+    if (dayWord == string.Empty) {
+        dayWord = externanHttpService.loadDatabase(builder).Result;
+    }
+
     if (word.Length != 5)
     {
         return Results.BadRequest("Não atende ao padrão de 5 letras.");
@@ -52,15 +58,13 @@ app.MapGet("/words/validations", async (TermoContext context, string word) =>
         return Results.BadRequest("Palavra não  aceita neste jogo.");
     }
 
-    var day = DateTime.Now.Date;
-    var dayWord = await context.DayWords.Where(w => w.Day == day).FirstOrDefaultAsync();
+    WordResult wordResult = ValidateWord(dayWord, word);
 
-    if (dayWord == null)
-    {
-        return Results.NotFound("Palavra não encontrada.");
+    if (wordResult.Success) {
+        //await context.DayWords.Where(w => w.Value == dayWord).ExecuteUpdateAsync();
     }
 
-    return Results.Ok(ValidateWord(dayWord.Value, word));
+    return Results.Ok(wordResult);
 });
 
 //MÉTODO VERIFICA SE A LETRA EXISTE NA PALAVRA E SE A MESMA ESTÁ NA POSIÇÃO CERTA
