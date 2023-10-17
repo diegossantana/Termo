@@ -40,3 +40,7 @@ ________________________________________________________________________ GITHUB 
 		B - Após a conclusão com exito do comando acima, deve-se excluir a pasta '.git' da pasta citada acima.
 		C - Após a exclusão da pasta '.git', ainda no diretório raiz, executar o seguinte código: git add NomeDaPastaQueContinhaOOutroRepositório.
 		D - Depois basta realizar o upload novamente, seja pelo visul studio, seja por linha ou IDE's do git.
+
+________________________________________________________________________ EXTERNALHTTPSERVICE - loadDataBase()
+	Esta função realizada a verificação se o banco de dados local tem palavras, caso não haja, faz a busca das informações e já a insere. 
+	Caso tenha, apenas seleciona a palavra de início e retorna para o jogo iniciar.

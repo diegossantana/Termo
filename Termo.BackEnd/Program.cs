@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Termo.BackEnd;
 
 var builder = WebApplication.CreateBuilder(args);
-var externanHttpService = new ExternalHttpService();
 
 builder.Services.AddCors();
 
@@ -10,6 +9,8 @@ builder.Services.AddDbContext<TermoContext>(context => context.UseSqlite(builder
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var externanHttpService = new ExternalHttpService(builder);
 
 var app = builder.Build();
 
