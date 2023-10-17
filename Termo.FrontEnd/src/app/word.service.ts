@@ -8,7 +8,7 @@ import { WordValidations } from './models/WordValidations';
 })
 export class WordService {
 
-  apiUrl = 'https://localhost:7224/words/'
+  apiUrl = 'https://localhost:7085/words/'
 
   constructor(private http: HttpClient) { }
 
@@ -17,6 +17,6 @@ export class WordService {
   }
 
   getValidations(word: string): Observable<WordValidations>{
-    return this.http.get<WordValidations>(`${this.apiUrl}validations?words=${word}`);
+    return this.http.get<WordValidations>(`${this.apiUrl}validations?word=${word}`);
   }
 }
