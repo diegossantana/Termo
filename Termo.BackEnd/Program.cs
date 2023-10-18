@@ -14,6 +14,8 @@ builder.Services.AddSwaggerGen();
 
 var externanHttpService = new ExternalHttpService();
 
+var termoPersistence = new TermoPersistence();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -31,8 +33,9 @@ p.AllowAnyOrigin()
 
 app.MapGet("/words", async (TermoContext context) =>
 {
+    
     var day = DateTime.Now.Date;
-    dayWord = externanHttpService.loadDatabase(builder).Result; 
+    dayWord = termoPersistence.loadDatabase(builder).Result; 
 
     if (dayWord == null)
     {
@@ -45,7 +48,7 @@ app.MapGet("/words", async (TermoContext context) =>
 app.MapGet("/words/validations", async (TermoContext context, string word) =>
 {
     if (dayWord == string.Empty) {
-        dayWord = externanHttpService.loadDatabase(builder).Result;
+        dayWord = termoPersistence.loadDatabase(builder).Result;
     }
 
     if (word.Length != 5)
@@ -61,6 +64,7 @@ app.MapGet("/words/validations", async (TermoContext context, string word) =>
     WordResult wordResult = ValidateWord(dayWord, word);
 
     if (wordResult.Success) {
+        termoPersistence.wordDaySuccessAsync(wordResult.Success);
         //await context.DayWords.Where(w => w.Value == dayWord).ExecuteUpdateAsync();
     }
 
