@@ -25,6 +25,13 @@ export class AppComponent {
 
   constructor(private service: WordService, private notifierService: NotifierService) { }
 
+  onClickNewGame(event: Event){
+
+  }
+  onClickRefresh(event: Event){
+
+  }
+
   onClick(event: Event) {
     if (!this.success) {
       var div = event.target as HTMLElement;

@@ -18,6 +18,31 @@
   margin-bottom: 60px;
 }
 
+.systemGame {
+  width: 344px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-bottom: 6px;
+}
+
+.options {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  font-family: Poppins, Helvetica Nueu, sans-serif;
+  font-size: 40px;
+  font-weight: bold;
+  border-radius: 8px;
+  color: #FFF;
+  background-color: #132e3b;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
 .board {
   width: 344px;
 }
@@ -157,8 +182,13 @@ div[pos="4"] {
 }
 
 @keyframes changeColor {
-  from {background-color: #132e3b;}
-  to {background-color: var(--color);}
+  from {
+    background-color: #132e3b;
+  }
+
+  to {
+    background-color: var(--color);
+  }
 }
 
 div[keyboard-key].place,
