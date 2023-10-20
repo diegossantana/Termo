@@ -4,6 +4,7 @@ import { catchError, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NotifierService } from 'angular-notifier';
 import { WordValidations } from './models/WordValidations';
+import { Router } from '@angular/router';
 
 export enum Key {
   ArrowLeft = 'ArrowLeft',
@@ -23,7 +24,15 @@ export class AppComponent {
   currentRow = 0;
   success = false;
 
-  constructor(private service: WordService, private notifierService: NotifierService) { }
+  constructor(private service: WordService, private notifierService: NotifierService, private router: Router) { }
+
+  onClickNewGame(event: Event) {
+    this.service.getNewGame();
+    location.reload();
+  }
+  onClickRefresh(event: Event) {
+    location.reload();
+  }
 
   onClick(event: Event) {
     if (!this.success) {

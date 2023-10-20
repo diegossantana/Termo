@@ -2,7 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Termo.BackEnd;
 
 var builder = WebApplication.CreateBuilder(args);
-var externanHttpService = new ExternalHttpService();
+
+string dayWord = string.Empty;
 
 builder.Services.AddCors();
 
@@ -11,10 +12,13 @@ builder.Services.AddDbContext<TermoContext>(context => context.UseSqlite(builder
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var externanHttpService = new ExternalHttpService();
+
+var termoPersistence = new TermoPersistence();
+
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
+if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
@@ -26,49 +30,52 @@ p.AllowAnyOrigin()
 .AllowAnyHeader()
 .AllowAnyMethod());
 
-app.MapGet("/words", async (TermoContext context) =>
-{
-    var day = DateTime.Now.Date;
-    var word = await context.DayWords.Where(w => w.Day == day).FirstOrDefaultAsync();
+app.MapGet("/words", async (TermoContext context) => {
 
-    if (word == null)
-    {
+    var day = DateTime.Now.Date;
+    dayWord = termoPersistence.loadDatabase(builder).Result;
+
+    if (dayWord == null) {
         return Results.NotFound();
     }
 
-    return Results.Ok(word.Value);
+    return Results.Ok(dayWord);
 });
 
-app.MapGet("/words/validations", async (TermoContext context, string word) =>
-{
-    if (word.Length != 5)
-    {
+app.MapGet("/words/validations", async (TermoContext context, string word) => {
+    if (dayWord == string.Empty) {
+        dayWord = termoPersistence.loadDatabase(builder).Result;
+    }
+
+    if (word.Length != 5) {
         return Results.BadRequest("Não atende ao padrão de 5 letras.");
     }
     var words = await externanHttpService.GetWords();
-    if (!words.Contains(word.ToLower()))
-    {
+    if (!words.Contains(word.ToLower())) {
         return Results.BadRequest("Palavra não  aceita neste jogo.");
     }
 
-    var day = DateTime.Now.Date;
-    var dayWord = await context.DayWords.Where(w => w.Day == day).FirstOrDefaultAsync();
+    WordResult wordResult = ValidateWord(dayWord, word);
 
-    if (dayWord == null)
-    {
-        return Results.NotFound("Palavra não encontrada.");
+    if (wordResult.Success) {
+        termoPersistence.wordDaySuccessAsync(wordResult.Success);
+        //await context.DayWords.Where(w => w.Value == dayWord).ExecuteUpdateAsync();
     }
 
-    return Results.Ok(ValidateWord(dayWord.Value, word));
+    return Results.Ok(wordResult);
+});
+
+app.MapGet("/words/newgame", async (TermoContext context, string word) => {
+    dayWord = termoPersistence.loadDatabase(builder).Result;
+
+    return Results.Ok(dayWord);
 });
 
 //MÉTODO VERIFICA SE A LETRA EXISTE NA PALAVRA E SE A MESMA ESTÁ NA POSIÇÃO CERTA
-static WordResult ValidateWord(string dayWord, string wordAttempt)
-{
+static WordResult ValidateWord(string dayWord, string wordAttempt) {
     Letter[] letterResult = new Letter[dayWord.Length];
 
-    for (int i = 0; i < wordAttempt.Length; i++)
-    {
+    for (int i = 0; i < wordAttempt.Length; i++) {
         var letterAttempt = wordAttempt[i];
         bool exists, rightPlace;
 
@@ -81,12 +88,10 @@ static WordResult ValidateWord(string dayWord, string wordAttempt)
     return new WordResult(letterResult, dayWord == wordAttempt);
 }
 
-app.MapPost("/words", async (TermoContext context, string word) =>
-{
+app.MapPost("/words", async (TermoContext context, string word) => {
     var day = DateTime.Now.Date;
 
-    var wordDb = new DayWord()
-    {
+    var wordDb = new DayWord() {
         Day = day,
         Value = word
     };

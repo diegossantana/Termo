@@ -3,6 +3,9 @@
 namespace Termo.BackEnd {
     public class TermoContext : DbContext {
         public DbSet<DayWord> DayWords { get; set; }
+
+        public TermoContext() {
+        }
         public TermoContext(DbContextOptions options) : base(options) {
         }
 
