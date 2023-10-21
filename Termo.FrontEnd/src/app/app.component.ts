@@ -117,6 +117,12 @@ export class AppComponent {
     if (word.length < 5) {
       this.notifierService.notify('info', 'Só palavras com 5 letras.')
     } else {
+      var index = Number(document.querySelector('.edit')?.getAttribute('pos'));
+
+      if (index == 4) {
+        document.querySelector('.edit')?.classList.remove('edit');
+      }
+
       this.getValidations(word.toLocaleLowerCase());
     }
   }
@@ -172,7 +178,11 @@ export class AppComponent {
             this.success = true;
             this.notifierService.notify('info', 'Sucesso');
           } else {
-            this.enableNextRow();
+            if (this.currentRow == 5) {
+              this.notifierService.notify('error', 'Falhou')
+            } else {
+              this.enableNextRow();
+            }
           }
           this.setKeyboardColors(validations)
         }, 1800);
