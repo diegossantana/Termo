@@ -1,3 +1,4 @@
+﻿
 ﻿________________________________________________________________________ BANCO DE DADOS
 
 1 - Para o gerenciamento das questãoes de banco de dados é necessário a instalação do pacote do 'MICROSOFT.ENTITYFRAMEWORKCORE' caso esteja utilizando o framework 'CORE' 
@@ -21,9 +22,6 @@ ________________________________________________________________________  DBCONT
 
 	4 - Realizada as configurações, o próximo passo é a adição(add-migration 'NomeDaMigrationInicial') e depois a criação do banco através do comando 'update-database'.
 
-	dotnet ef migrations add FirstMigration --startup-project .\Termo.BackEnd\Termo.Api --project .\Termo.BackEnd\Termo.Infrastructure
-	dotnet ef database update --startup-project .\Termo.BackEnd\Termo.Api --project .\Termo.BackEnd\Termo.Infrastructure
-
 ________________________________________________________________________ WEB API
 	
 	1 - Como característa essencial, as questãos dos verbos HTTP's(GET, PUT, POST, DELETE), já podem ser construídos nos seus respectivos locais. Como vemos na classe 'program.cs',
@@ -44,6 +42,20 @@ ________________________________________________________________________ GITHUB 
 		C - Após a exclusão da pasta '.git', ainda no diretório raiz, executar o seguinte código: git add NomeDaPastaQueContinhaOOutroRepositório.
 		D - Depois basta realizar o upload novamente, seja pelo visul studio, seja por linha ou IDE's do git.
 
-________________________________________________________________________ EXTERNALHTTPSERVICE - loadDataBase()
+________________________________________________________________________ TERMOPERSISTENCE - loadDataBase()
 	Esta função realizada a verificação se o banco de dados local tem palavras, caso não haja, faz a busca das informações e já a insere. 
 	Caso tenha, apenas seleciona a palavra de início e retorna para o jogo iniciar.
+
+________________________________________________________________________ TERMOPERSISTENCE - populationDatabase()
+	Faz população do banco de dados.
+	Vai ao repositório passado.
+	Filtra as palavras com 5 letras.
+	Realiza a persistências destas no banco de dados.
+
+________________________________________________________________________ TERMOPERSISTENCE - gettingWordDay()
+	Pega uma aleatória dentro do banco de dados.
+	Gera numero aleatório com base na quantidade de registros existentes dentro do banco de dados.
+	Abre conexão com o banco e realiza a seleção da palavra.
+
+________________________________________________________________________ TERMOPERSISTENCE - wordDauSuccessAsync()
+	Sinaliza através da persistência no banco de dados que a palavra jã foi usada e que a mesma retornou como sucesso.

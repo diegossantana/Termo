@@ -49,7 +49,7 @@ export class AppComponent {
       var div = event.target as HTMLElement;
       var letter = div.getAttribute('keyboard-key') ?? '';
 
-      if (/[a-zA-Z]/.test(letter) && letter.length == 1) {
+      if ((/[\u00C0-\u017F]/.test(letter) || /[a-zA-Z]/.test(letter)) && letter.length == 1) {
         this.setCurrentPositionValue(letter);
         this.moveRight();
       } else if (letter == Key.ArrowRight) {
