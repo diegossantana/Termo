@@ -1,20 +1,26 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Http;
+using Microsoft.Extensions.Options;
+using Termo.Domain;
 
-namespace Termo.BackEnd {
+namespace Termo.Infrastructure {
     public class TermoPersistence {
         private readonly HttpClient _httpClient;
+        private readonly TermoContext _context;
+
+        public static TermoPersistence termoPersistence;
+
         public static string WordDay { get; set; }
 
         public TermoPersistence() {
             _httpClient = new HttpClient();
+            _context = new TermoContext(new DbContextOptions<TermoContext>());
         }
-        public async Task<string> loadDatabase(WebApplicationBuilder builder) {
-            TermoContext context = new TermoContext();
-            int amountWords = context.DayWords.Count();
 
-            await populationDatabase(context, amountWords);
+        public async Task<string> loadDatabase() {
+            int amountWords = _context.DayWords.Count();
+
+            await populationDatabase(amountWords);
 
             WordDay = gettingWordDay(amountWords);
 
@@ -54,7 +60,7 @@ namespace Termo.BackEnd {
             return wordDay;
         }
 
-        private async Task populationDatabase(TermoContext context, int amountWords) {
+        private async Task populationDatabase(int amountWords) {
             if (amountWords < 365) {
                 var response = await _httpClient.GetAsync("https://www.ime.usp.br/~pf/dicios/br-utf8.txt");
                 //var response = await _httpClient.GetAsync("https://raw.githubusercontent.com/fserb/pt-br/master/palavras");
@@ -62,28 +68,39 @@ namespace Termo.BackEnd {
                 var wordsSpliteds = concatedWords.Split("\n").Where(p => p.Length == 5).ToList();
 
                 foreach (var item in wordsSpliteds) {
-                    await context.DayWords.AddAsync(new DayWord {
+                    await _context.DayWords.AddAsync(new DayWord {
                         Value = item,
                         Used = false,
                         Success = false,
                     });
                 }
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
         }
 
-        internal async Task wordDaySuccessAsync(bool success) {
-            TermoContext context = new TermoContext();
+        public async Task wordDaySuccessAsync(bool success) {
 
-            var wordDay = context.DayWords.Where(w => w.Value ==  WordDay).FirstOrDefaultAsync();
+            var wordDay = _context.DayWords.Where(w => w.Value == WordDay).FirstOrDefaultAsync();
 
             wordDay.Result.Success = true;
 
             wordDay.Result.Used = true;
 
-            context.DayWords.Update(wordDay.Result);
+            _context.DayWords.Update(wordDay.Result);
 
-            context.SaveChanges();
+            _context.SaveChanges();
+        }
+
+        public async Task AddWords(string word) {
+            var day = DateTime.Now.Date;
+
+            var wordDb = new DayWord() {
+                Day = day,
+                Value = word
+            };
+
+            await _context.DayWords.AddAsync(wordDb);
+            await _context.SaveChangesAsync();
         }
     }
 }

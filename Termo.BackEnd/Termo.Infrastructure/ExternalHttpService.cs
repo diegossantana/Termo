@@ -1,12 +1,12 @@
-﻿using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using Microsoft.EntityFrameworkCore.Update.Internal;
-using Microsoft.Extensions.Configuration;
-using System.Linq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+﻿//using Microsoft.Data.Sqlite;
+//using Microsoft.EntityFrameworkCore;
+//using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+//using Microsoft.EntityFrameworkCore.Update.Internal;
+//using Microsoft.Extensions.Configuration;
+//using System.Linq;
+//using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
-namespace Termo.BackEnd {
+namespace Termo.Infrastructure {
     public class ExternalHttpService {
         private readonly HttpClient _httpClient;
         public ExternalHttpService() {

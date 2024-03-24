@@ -49,7 +49,7 @@ export class AppComponent {
       var div = event.target as HTMLElement;
       var letter = div.getAttribute('keyboard-key') ?? '';
 
-      if (/[a-zA-Z]/.test(letter) && letter.length == 1) {
+      if ((/[\u00C0-\u017F]/.test(letter) || /[a-zA-Z]/.test(letter)) && letter.length == 1) {
         this.setCurrentPositionValue(letter);
         this.moveRight();
       } else if (letter == Key.ArrowRight) {
@@ -71,7 +71,7 @@ export class AppComponent {
   onKeyPress(event: KeyboardEvent) {
     if (!this.success) {
       var key = event.key;
-      if (/[a-zA-Z]/.test(key) && key.length == 1) {
+      if ((/[\u00C0-\u017F]/.test(key) || /[a-zA-Z]/.test(key)) && key.length == 1) {
         this.setCurrentPositionValue(key);
         this.moveRight();
       } else if (key == Key.ArrowRight) {
