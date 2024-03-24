@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Termo.BackEnd;
+using Termo.Domain;
+using Termo.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,8 +15,7 @@ builder.Services.AddSwaggerGen();
 
 var externanHttpService = new ExternalHttpService();
 
-var termoPersistence = new TermoPersistence();
-
+TermoPersistence.termoPersistence = new TermoPersistence();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -31,12 +31,12 @@ p.AllowAnyOrigin()
 .AllowAnyHeader()
 .AllowAnyMethod());
 
-app.MapGet("/words", async (TermoContext context) =>
+app.MapGet("/words", async () =>
 {
 
     var day = DateTime.Now.Date;
     if (dayWord.Length < 1) {
-        dayWord = termoPersistence.loadDatabase(builder).Result;
+        dayWord = TermoPersistence.termoPersistence.loadDatabase().Result;
     } 
 
     if (dayWord == null)
@@ -47,11 +47,11 @@ app.MapGet("/words", async (TermoContext context) =>
     return Results.Ok(dayWord);
 });
 
-app.MapGet("/words/validations", async (TermoContext context, string word) =>
+app.MapGet("/words/validations", async (string word) =>
 {
     if (dayWord == string.Empty)
     {
-        dayWord = termoPersistence.loadDatabase(builder).Result;
+        dayWord = TermoPersistence.termoPersistence.loadDatabase().Result;
     }
 
     if (word.Length != 5)
@@ -68,16 +68,16 @@ app.MapGet("/words/validations", async (TermoContext context, string word) =>
 
     if (wordResult.Success)
     {
-        termoPersistence.wordDaySuccessAsync(wordResult.Success);
+        TermoPersistence.termoPersistence.wordDaySuccessAsync(wordResult.Success);
         //await context.DayWords.Where(w => w.Value == dayWord).ExecuteUpdateAsync();
     }
 
     return Results.Ok(wordResult);
 });
 
-app.MapGet("/words/newgame", async (TermoContext context, string word) =>
+app.MapGet("/words/newgame", async () =>
 {
-    dayWord = termoPersistence.loadDatabase(builder).Result;
+    dayWord = TermoPersistence.termoPersistence.loadDatabase().Result;
 
     return Results.Ok(dayWord);
 });
@@ -101,18 +101,8 @@ static WordResult ValidateWord(string dayWord, string wordAttempt)
     return new WordResult(letterResult, dayWord == wordAttempt);
 }
 
-app.MapPost("/words", async (TermoContext context, string word) =>
-{
-    var day = DateTime.Now.Date;
-
-    var wordDb = new DayWord()
-    {
-        Day = day,
-        Value = word
-    };
-
-    await context.DayWords.AddAsync(wordDb);
-    await context.SaveChangesAsync();
+app.MapPost("/words", async (string word) => {
+    await TermoPersistence.termoPersistence.AddWords(word);
 });
 
 app.Run();

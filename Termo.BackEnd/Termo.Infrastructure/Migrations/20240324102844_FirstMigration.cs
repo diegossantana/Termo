@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Termo.BackEnd.Migrations
+namespace Termo.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InicialMigration : Migration
+    public partial class FirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,9 @@ namespace Termo.BackEnd.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Value = table.Column<string>(type: "TEXT", nullable: true),
-                    Day = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Day = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Used = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Success = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

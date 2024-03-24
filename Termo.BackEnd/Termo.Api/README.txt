@@ -21,6 +21,9 @@ ________________________________________________________________________  DBCONT
 
 	4 - Realizada as configurações, o próximo passo é a adição(add-migration 'NomeDaMigrationInicial') e depois a criação do banco através do comando 'update-database'.
 
+	dotnet ef migrations add FirstMigration --startup-project .\Termo.BackEnd\Termo.Api --project .\Termo.BackEnd\Termo.Infrastructure
+	dotnet ef database update --startup-project .\Termo.BackEnd\Termo.Api --project .\Termo.BackEnd\Termo.Infrastructure
+
 ________________________________________________________________________ WEB API
 	
 	1 - Como característa essencial, as questãos dos verbos HTTP's(GET, PUT, POST, DELETE), já podem ser construídos nos seus respectivos locais. Como vemos na classe 'program.cs',

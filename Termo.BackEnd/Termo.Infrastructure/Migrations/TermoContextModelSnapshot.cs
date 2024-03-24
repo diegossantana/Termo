@@ -3,11 +3,11 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Termo.BackEnd;
+using Termo.Infrastructure;
 
 #nullable disable
 
-namespace Termo.BackEnd.Migrations
+namespace Termo.Infrastructure.Migrations
 {
     [DbContext(typeof(TermoContext))]
     partial class TermoContextModelSnapshot : ModelSnapshot
@@ -17,7 +17,7 @@ namespace Termo.BackEnd.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
 
-            modelBuilder.Entity("Termo.BackEnd.DayWord", b =>
+            modelBuilder.Entity("Termo.Domain.DayWord", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
