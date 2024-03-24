@@ -59,3 +59,18 @@ ________________________________________________________________________ TERMOPE
 
 ________________________________________________________________________ TERMOPERSISTENCE - wordDauSuccessAsync()
 	Sinaliza através da persistência no banco de dados que a palavra jã foi usada e que a mesma retornou como sucesso.
+	Caso tenha, apenas seleciona a palavra de início e retorna para o jogo iniciar.
+
+________________________________________________________________________ TERMOPERSISTENCE - populationDatabase()
+	Faz população do banco de dados.
+	Vai ao repositório passado.
+	Filtra as palavras com 5 letras.
+	Realiza a persistências destas no banco de dados.
+
+________________________________________________________________________ TERMOPERSISTENCE - gettingWordDay()
+	Pega uma aleatória dentro do banco de dados.
+	Gera numero aleatório com base na quantidade de registros existentes dentro do banco de dados.
+	Abre conexão com o banco e realiza a seleção da palavra.
+
+________________________________________________________________________ TERMOPERSISTENCE - wordDauSuccessAsync()
+	Sinaliza através da persistência no banco de dados que a palavra jã foi usada e que a mesma retornou como sucesso.
